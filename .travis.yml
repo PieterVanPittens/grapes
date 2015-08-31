@@ -17,8 +17,8 @@ deploy:
     develop: gdev
   domain: cforge
   on:
-    repo: PieterVanPittens/grapes
-    all_branches: true
+    repo:PieterVanPittens/grapes
+    branch: develop
 after_success:
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
