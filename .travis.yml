@@ -8,3 +8,4 @@ script: phpunit test/test.php
 
 before_script:
   - mysql -e 'create database grapes_test;'
+  
