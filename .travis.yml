@@ -18,7 +18,6 @@ deploy:
   on:
     repo: PieterVanPittens/grapes
     branch: develop
-	deployment_branch: master
 after_success:
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
