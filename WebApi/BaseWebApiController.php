@@ -1,4 +1,4 @@
-<?
+<?php
 
 /**
  * Base class WebApi
@@ -6,12 +6,7 @@
 class BaseWebApiController {
 	public $contextUser;
 	public $mySqlRepository;
-	public $config;
-
-	public $gamePlayer;
-	public $gameRepository;
-	public $gameConfig;
-	
+	public $config;	
 
 	public function returnValidationState($validationState) {
 		if ($validationState->isValid) {
@@ -37,6 +32,19 @@ class BaseWebApiController {
 			$apiResponse->data = $array;
 		}
 		return $apiResponse;
+	}
+	
+	/**
+	 * gets the value of a request parameter that is mandatory to be provided by a request
+	 * throws WebApiException if Parameter does not exist in _REQUEST
+	 * @param string $name
+	 */
+	public function getMandatoryParameter($name) {
+		if (isset($_REQUEST[$name])) {
+			return $_REQUEST[$name];
+		} else {
+			throw new ParameterException("Parameter is missing in request: '$name'");
+		}
 	}
 }
 

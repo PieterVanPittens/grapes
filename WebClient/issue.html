@@ -1,0 +1,72 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>
+			<span ng-if="issue.issueTypeId == 1" class="glyphicon glyphicon-flash" aria-hidden="true" title="Issue"></span>
+			<span ng-if="issue.issueTypeId == 2" class="glyphicon glyphicon-film" aria-hidden="true" title="Story"></span>
+			<span ng-if="issue.issueTypeId == 3" class="glyphicon glyphicon-fire" aria-hidden="true" title="Incident"></span>
+			<!--<span class="glyphicon glyphicon-arrow-down icon-blue" aria-hidden="true"></span>-->
+			<span ng-if="issue.statusId == 1" class="glyphicon glyphicon-unchecked" aria-hidden="true" title="New"></span>
+			<span ng-if="issue.statusId == 2" class="glyphicon glyphicon-edit" aria-hidden="true" title="In Progress"></span>
+			<span ng-if="issue.statusId == 3" class="glyphicon glyphicon-share" aria-hidden="true" title="Resolved"></span>
+			<span ng-if="issue.statusId == 4" class="glyphicon glyphicon-check" aria-hidden="true" title="Closed"></span>
+			{{issue.issueNr}} <a href="#" editable-text="issue.subject" onbeforesave="updateIssueSubject($data)">{{issue.subject}}</a></h1>
+		</div>
+	</div>
+
+	<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+	    <div class="nav navbar-nav">
+			<button ng-if="issue.statusId == 1" type="button" id="button-progress" class="btn btn-default navbar-btn" ng-click="setInProgress()">Start Working</button>
+			<button ng-if="issue.statusId == 2" type="button" id="button-resolve" class="btn btn-default navbar-btn" ng-click="setResolved()">Resolve</button>
+			<button ng-if="issue.statusId == 3" type="button" id="button-close" class="btn btn-default navbar-btn" ng-click="setClosed()">Close</button>
+			<button ng-if="issue.statusId == 2 || issue.statusId == 3 || issue.statusId == 4" type="button" id="button-repoen" class="btn btn-default navbar-btn" ng-click="setNew()">Reopen</button>
+		</div>
+	</div>
+	</nav>
+
+	<div class="row">
+		<div class="col-md-4">
+		<p>Created: {{issue.createdAt*1000 | date:'medium'}} by {{issue.createdBy.displayName}}</p>
+		<!--<p>Last Edited: {{issue.createdAt*1000 | date:'medium'}} by {{issue.createdBy.displayName}}</p>-->
+		<!--<p><a>wikipage</a></p>-->
+
+
+		</div>
+		<div class="col-md-4">
+			<!--<p>Type: {{issue.statusTypeId}}</p>-->
+			<p>Project: {{issue.project.name}}</p>
+			<p>Component: {{issue.component.name}}</p>
+			<p>Responsible: {{issue.assignedTo.displayName}} <a href="#" id="formAssignedToUserId" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">{{issue.assignedTo.displayName}}</a></p>
+
+			<a href="#" editable-select="issue.assignedToUserId" e-ng-options="s.userId as s.displayName for s in projectUsers">
+				{{ showStatus() }}
+			</a>
+
+
+			<p>Status: {{issue.status.name}}</p>
+			<!--<p>Priority: ...</p>-->
+			<!--<p>Planned for: (Release/Sprint)</p>-->
+		</div>
+		<!--
+		<div class="col-md-4">
+		<p><b>Last Activity</b> was <b>12 days</b> ago<br/>
+		<b>Last Status Change</b> was <b>17 days</b> ago<br/>
+		status changed <b>23 times</b> already<br/>
+		5 people are involved</p>
+		</div>
+		-->
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<p>Description</p>
+			<p>{{issue.description}}</p>
+		</div>
+		<!--
+		<div class="col-md-6">
+			<p>Attachments</p>
+			<p>attachments....</p>
+		</div>
+		-->
+	</div>
+</div>

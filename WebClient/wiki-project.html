@@ -1,0 +1,114 @@
+<div class="row">
+  <div class="col-md-8">
+
+	<div ng-bind-html="html"></div>
+  
+  
+  </div>
+  <div class="col-md-4">
+
+	<div class="panel panel-default">
+		<div class="panel-header">Progress</div>
+	  <div class="panel-body">
+	    
+	    <div class="progress">
+		  <div class="progress-bar progress-bar-danger" ng-style="{width : ( progress[0].percent + '%' ) }">
+		    {{progress[0].count}} open
+		  </div>
+		  <div class="progress-bar progress-bar-warning"  ng-style="{width : ( progress[1].percent + '%' ) }">
+		    {{progress[1].count}} in progress
+		  </div>
+		  <div class="progress-bar progress-bar-info" ng-style="{width : ( progress[2].percent + '%' ) }">
+		    {{progress[2].count}} closed
+		  </div>
+		  <div class="progress-bar progress-bar-success" ng-style="{width : ( progress[3].percent + '%' ) }">
+		    {{progress[3].count}} confirmed
+		  </div>
+		</div>
+
+
+	  </div>
+	</div>
+
+	<div class="row">
+		  <div class="col-md-6">
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Contributors
+	  </div>
+	</div>
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Latest Releases
+	  </div>
+	</div>
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Upcoming dates
+	  </div>
+	</div>
+
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Stories
+	  </div>
+	</div>
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Secret Areas:
+	    <ol>
+	    <li>not reproducible</li>
+	    <li>not been touched for quite a while</li>
+	    </ol>
+	    
+	  </div>
+	</div>
+		  
+		  
+		  </div>
+
+		  <div class="col-md-6">
+
+	<div class="panel panel-default">
+	  <div class="panel-header">Components</div>
+	  <div class="panel-body">
+	  	<ul>
+	  		<li ng-repeat="component in components">
+	    	<a href="#/wiki/{{component.wikiName}}">{{component.name}}</a>
+	    	</li>
+	  	</ul>
+	  </div>
+	</div>
+
+	<div class="panel panel-default">
+	  <div class="panel-header">Releases</div>
+	  <div class="panel-body">
+	  	<ul>
+	  		<li ng-repeat="release in releases">
+	    	<a href="#/wiki/{{release.wikiName}}">{{release.name}}</a>
+	    	</li>
+	  	</ul>
+	  </div>
+	</div>
+		  
+		  
+		  </div>
+	
+	
+	</div>
+
+
+	
+
+  
+ 
+  
+  </div>
+</div>
+
+

@@ -1,0 +1,22 @@
+<div class="container-fluid">
+
+	<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+	    <div class="nav navbar-nav">
+			<button type="button" id="button-new" class="btn btn-default navbar-btn" ng-click="openCreate()">Reopen</button>
+		</div>
+	</div>
+	</nav>
+
+<div id="microtiles">
+
+<div class="microtile" ng-repeat="tile in map.tiles" id="tile{{tile.dashboardTileId}}" ng-init="init(tile.dashboardTileId)" data-tileId="{{tile.dashboardTileId}}" ng-controller="tileController" style="position: absolute;" ng-style="{left: tile.col+'px', top: tile.row+'px'}">
+<input type="hidden" ng-model="dashboardTileId" value="{{tile.dashboardTileId}}"/>
+<div ng-include src="tile.templateUrl"></div>
+</div>
+
+
+
+</div>
+
+</div>

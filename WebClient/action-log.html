@@ -1,0 +1,25 @@
+<div style="height: 100%">
+
+
+<div><h1>Action Log</h1></div>
+
+<div infinite-scroll="loadNext()" infinite-scroll-disabled='isBusy' infinite-scroll-distance='1000' id="infiniteActionLog">
+	<div class="feed-item" ng-repeat="item in items">
+		<div class="feed-content">
+			<div class="feed-icon"><a href="#"><img ng-src="WebClient/images/{{item.user.name}}_small.jpg" alt="{{item.user.displayName}}"/></a></div>
+			<div class="feed-content-text">
+			<a href="#">{{item.user.displayName}}</a> {{item.action.name}}<br/>{{item.timestamp*1000 | date:'medium'}}
+			</div>
+		</div>
+		<div ng-show="item.objectTypeId == 1">User</div>
+		<div ng-show="item.objectTypeId == 2">Issue</div>
+		<div ng-show="item.objectTypeId == 3">Project</div>
+		
+		
+		<div>item details: So Honored to have Hannah Mermaid featured in the official video for an-ten-nae Oceans Deep. Please Share and help spread awareness for Oceana, an amazing ORG., dedicated to saving our Oceans! Big thanks to Shawn Heinrichs for the amazing footage.</div>
+	</div>
+	<div ng-show="isBusy">Loading...</div>
+</div>
+
+
+</div>

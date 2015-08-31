@@ -1,11 +1,11 @@
-<?
+<?php
 
 class ProjectsApiController extends BaseWebApiController {
 
 	/**
 	 * creates a new project
 	 * @param unknown $parameters
-	 * @return ApiResponse
+	 * @return ActionResult
 	 */
 	public function CreateProject($parameters) {
 		$body = file_get_contents('php://input');
@@ -13,9 +13,9 @@ class ProjectsApiController extends BaseWebApiController {
 		$project = Project::createModelFromJson($body); 
 		$service = new ProjectService($this->contextUser, $this->repository);
 		$validationState = new ValidationState();
-		$project = $service->createProject($project, $validationState);
+		$actionResult = $service->createProject($project, $validationState);
 
-		return $this->createApiResponseForObject($project, $validationState);
+		return $actionResult;
 
 	}
 
@@ -23,20 +23,13 @@ class ProjectsApiController extends BaseWebApiController {
 	 * creates a new project component
 	 * @param unknown $parameters
 	 */
-	public function CreateProjectComponent($parameters) {
+	public function createProjectComponent($parameters) {
 		$body = file_get_contents('php://input');
 		$component = Component::createModelFromJson($body);
-		$id = $parameters["id"];
-		$component->projectId = $id;
 		
 		$service = new ProjectService($this->contextUser, $this->repository);
-		$validationState = new ValidationState();
-		$component = $service->createProjectComponent($component, $validationState);
-		if ($validationState->validationStateType == ValidationStateType::Error) {
-			return $validationState;
-		} else {
-			return $component;
-		}
+		$component = $service->createComponent($component);
+		return $component;
 	}
 	
 	/**
@@ -69,16 +62,41 @@ class ProjectsApiController extends BaseWebApiController {
 		$component = Component::createModelFromJson($body);
 		$component->componentId = $id;
 		$service = new ProjectService($this->contextUser, $this->repository);
-		$validationState = new ValidationState();
-		$component = $service->updateComponent($component, $validationState);
-		if ($validationState->validationStateType == ValidationStateType::Error) {
-			return $validationState;
-		} else {
-			return $component;
-		}
+		$actionResult = $service->updateComponent($component);
+		return $actionResult;
+	}
+	
+	/**
+	 * saves a project user role
+	 * @param AccessControlItem $aci
+	 * @return ActionResult
+	 */
+	public function saveProjectAci($parameters) {
+		$projectId = $parameters["id"];
+		$body = file_get_contents('php://input');
+		$aci = AccessControlItem::createModelFromJson($body);
+		$aci->projectId = $projectId;
+		$service = new ProjectService($this->contextUser, $this->repository);
+		$actionResult = $service->saveProjectAci($aci);
+		return $actionResult;
 	}
 	
 	
+	/**
+	 * retrieves a project by identifier
+	 * @param unknown $parameters
+	 * @return string
+	 */
+	public function getProjectByIdentifier($parameters) {
+		$identifier = $parameters["identifier"];
+	
+		$service = new ProjectService($this->contextUser, $this->repository);
+		$project = $service->getProjectByIdentifier($identifier);
+		if ($project == null) {
+			throw new NotFoundException("Project '$identifier' not found");
+		}
+		return $project;
+	}
 	
 	
 	/**
@@ -90,13 +108,11 @@ class ProjectsApiController extends BaseWebApiController {
 		$name = $parameters["name"];
 		
 		$service = new ProjectService($this->contextUser, $this->repository);
-		$validationState = new ValidationState();
-		$project = $service->getProjectByName($name, $validationState);
+		$project = $service->getProjectByName($name);
 		if ($project == null) {
-			return $validationState;
-		} else {
-			return $project;
+			throw new NotFoundException("Project '$name' not found");
 		}
+		return $project;
 	}
 	
 	/**
@@ -143,13 +159,8 @@ class ProjectsApiController extends BaseWebApiController {
 	public function GetComponent($parameters) {
 		$id = $parameters["id"];
 		$service = new ProjectService($this->contextUser, $this->repository);
-		$validationState = new ValidationState();
-		$component = $service->getComponent($id, $validationState);
-		if ($component == null) {
-			return $validationState;
-		} else {
-			return $component;
-		}
+		$component = $service->getComponentById($id);
+		return $component;
 	}
 	
 	
@@ -162,14 +173,23 @@ class ProjectsApiController extends BaseWebApiController {
 	public function GetProjectComponents($parameters) {
 		$id = $parameters["id"];
 		$service = new ProjectService($this->contextUser, $this->repository);
-		$validationState = new ValidationState();
-		$components = $service->getProjectComponents($id, $validationState);
-		if (!is_array($components)) {
-			return $validationState;
-		} else {
-			$data["data"] = $components;
-			return $data;
-		}
+		$components = $service->getProjectComponents($id);
+		$data["data"] = $components;
+		return $data;
+	}
+	
+	
+	/**
+	 * retrieves releases of a project
+	 * @param unknown $parameters
+	 * @return string
+	 */
+	public function getProjectReleases($parameters) {
+		$id = $parameters["id"];
+		$service = new ProjectService($this->contextUser, $this->repository);
+		$releases = $service->getProjectReleases($id);
+		$data["data"] = $releases;
+		return $data;
 	}
 	
 
@@ -190,7 +210,6 @@ class ProjectsApiController extends BaseWebApiController {
 		}
 	}
 	
-	
 	/**
 	 * retrieves all projects
 	 * @param unknown $parameters
@@ -198,99 +217,59 @@ class ProjectsApiController extends BaseWebApiController {
 	 */
 	public function GetProjects() {
 		$service = new ProjectService($this->contextUser, $this->repository);
-	
-		$validationState = new ValidationState();
-		$projects = $service->getProjects($validationState);
+		$projects = $service->getProjects();
 		$data["data"] = $projects;
-		
-		return $this->createApiResponseForArray($projects, $validationState);
-		/*
-		if ($projects == null) {
-			return $validationState;
-		} else {
-			$data["data"] = $projects;
-			return $data;
-		}
-		*/
+		return $data;
 	}
 
 	/**
-	 * updates position of dashboardtile
-	 * @param unknown $parameters
-	 */
-	public function UpdatePosition($parameters) {
-		$body = file_get_contents('php://input');
-
-		
-		$dashboardTile = new DashboardTile();
-		$dashboardTile->dashboardTileId = $parameters["id"];
-		$dashboardTile->height = $_POST["size_y"];
-		$dashboardTile->width = $_POST["size_x"];
-		$dashboardTile->col = $_POST["col"];
-		$dashboardTile->row = $_POST["row"];
-
-		$service = new DashboardService($this->contextUser, $this->repository);
-		$service->updateDashboardTilePosition($dashboardTile);
-		
-	}
-
-	/**
-	 * adds a tile to a dashboard
-	 * @param unknown $parameters
-	 */
-	public function AddTileToDashboard($parameters) {
-		$dashboardId = $parameters["id"];
-		$service = new DashboardService($this->contextUser, $this->repository);
-		
-		$dashboard = $service->getDashboardById($dashboardId);
-		if ($dashboard == null) {
-			return "HTTP/1.0 404 Not Found";
-		}
-
-		$tileId = $_POST["tileId"];
-		
-		$tile = $service->getTile($tileId);
-		if ($tile == null) {
-			return "HTTP/1.0 400 Tile not Found";
-		}
-
-		$validationState = new ValidationState();
-		$dashboardTile = $service->addTileToDashboard($tile, $dashboard, $validationState);	
-	}
-	
-
-	/**
-	 * remove tile from dashboard
-	 * @param unknown $parameters
-	 */
-	public function removeTileFromDashboard($parameters) {
-		$tileId = $parameters["id"];
-		$service = new DashboardService($this->contextUser, $this->repository);
-		$service->removeTileFromDashboard($tileId);
-		
-	}
-	
-	
-	/**
-	 * gets list of all tiles registered in the system
+	 * retrieves all project users
 	 * @param unknown $parameters
 	 * @return string
 	 */
-	public function GetTiles() {
-	
-		$service = new DashboardService($this->contextUser, $this->repository);
-	
-		$tiles = $service->getTiles();
-		$result = array();
-		$result["tiles"] = $tiles;
-		
-		if ($tiles == null) {
-			return "HTTP/1.0 404 Not Found";
-		} else {
-			return json_encode($result);
-		}
+	public function getProjectUsers($parameters) {
+		$id = $parameters["id"];
+		$service = new ProjectService($this->contextUser, $this->repository);
+		$users = $service->getProjectUsers($id);
+		$data["data"] = $users;
+		return $data;
+	}
+
+	/**
+	 * retrieves a list of all users in the system and their rights in this project
+	 * @param unknown $parameters
+	 * @return string
+	 */
+	public function getProjectUsersAll($parameters) {
+		$id = $parameters["id"];
+		$service = new ProjectService($this->contextUser, $this->repository);
+		$users = $service->getProjectUsersAll($id);
+		$data["data"] = $users;
+		return $data;
 	}
 	
+	
+	
+	/**
+	 * retrieves all badges
+	 * @param unknown $parameters
+	 * @return string
+	 */
+	public function getBadges() {
+		$service = new BadgeService($this->contextUser, $this->repository);
+		$badges = $service->getBadges();
+		$data["data"] = $badges;
+		return $data;
+	}
+	
+	public function getProjectProgress($parameters) {
+		$projectId = $parameters["id"];
+		
+		$service = new ProjectService($this->contextUser, $this->repository);
+		$progress = $service->getProjectProgress($projectId);
+		return $progress;
+		
+	}	
 }
 
 
