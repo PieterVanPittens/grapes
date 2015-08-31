@@ -1,0 +1,59 @@
+<nav class="navbar navbar-sub" role="navigation">
+  <div class="container-fluid">
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <p class="navbar-text">{{auth.currentUser.displayName}}'s Dashboard</p>
+        	<button  ng-if="auth.isLoggedIn() && !auth.isPublicUser()" id="add-tiles" data-target="#tilesModal" data-toggle="modal" class="btn btn-default navbar-btn">Add Tiles</button>
+
+      <ul class="nav navbar-nav">
+        <li></li>
+        <li ng-if="!auth.isPublicUser()">
+        </li>
+      </ul>
+
+
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="admin-home-dashboard">
+
+<div class="modal tilepicker" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="tilesModal" fade-in>
+  <div class="modal-dialog tilepicker">
+  
+  
+    <div class="modal-content">
+    	<div class="modal-header">
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="myModalLabel">Tiles</h4>
+    	</div>
+      
+	<div class="row" >
+		<div class="col-md-4" ng-repeat-start="tile in tiles">
+		<div class="pick-a-tile">
+
+		<div class="row">
+		  <div class="col-md-4"><img src="Plugins/Tiles/{{tile.name}}/preview.jpg" style="width: 150px; height: auto;"></div>
+		  <div class="col-md-8"><h3>{{tile.title}}</h3><p>{{tile.description}}</p></div>
+		</div>
+
+			<div style="margin-top: 3px; text-align: right;"><button type="button" class="btn btn-primary" ng-click="addTileToDashboard(tile.tileId)">Add</button></div>
+		</div>
+		
+	
+	
+		</div>
+		<div class="clearfix" ng-if="$index%3==2"></div>
+		<div ng-repeat-end=""></div>
+	</div>
+
+    </div>
+  </div>
+</div>
+
+<div class="gridster">
+<ul></ul>
+
+</div>
+</div>

@@ -1,0 +1,179 @@
+<div ng-controller="NavController">
+<nav class="navbar navbar-top navbar-fixed-top taskbar" role="navigation">
+  <div class="container-fluid">
+
+  <div class="navbar-header">
+      <a class="navbar-brand" href="#home">
+        <img alt="Brand" src="WebClient/images/grapes-full.png" style="height: 36px;">
+      </a>
+    </div>
+  
+  
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+	<ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#home" id="nav1-home">Home</a></li>
+            <li ng-if="!auth.isLoggedIn || auth.isPublicUser()"><a data-target="#loginModal" data-toggle="modal">Login</a></li>
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()" class="divider"></li>
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()"><a href="#issues" id="nav1-issues">Issues</a></li>
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()"><a href="#wiki" id="nav1-wiki">Wiki</a></li>
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()" class="divider"></li>
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()"><a href="#users" id="nav1-users">Users</a></li>
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()"><a href="#projects" id="nav1-projects">Projects</a></li>
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()" class="divider"></li>
+            <!--<li><a href="#config" id="nav1-configuration">Configuration</a></li>-->
+            <!--<li><a href="#actionlog" id="nav1-actionlog">Action Log</a></li>-->
+            </ul>
+        </li>
+        <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()">
+        	<a data-target="#createIssueModal" data-toggle="modal" ><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+        </li>
+        <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()">
+            <a data-target="#createFromFileModal" data-toggle="modal" ><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+      <!-- 
+      <li>
+	<form class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+	
+      </li>
+      -->
+		<!--      
+		<li class="nav navbar-nav"><a href="#" class="nav navbar-nav"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span></a>
+		</li>
+		-->
+		<li class="nav navbar-nav"><p class="navbar-text">XP:<span id="points">{{auth.currentUser.points}}</span><span class="pointsupdate" id="pointsupdate" ng-hidden></span></p>
+		</li>		
+		
+	  <li class="dropdown">
+          <a class="dropdown-toggle navbar-brand" data-toggle="dropdown" role="button"><img style="height: 36px;" src="{{auth.currentUser.imageMicroUrl}}" alt="{{auth.currentUser.displayName}}"/></a>
+          <ul class="dropdown-menu" role="menu">
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser() && false "><a href="#">Profile</a></li>
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()" class="divider"></li>
+            <li ng-if="auth.isLoggedIn() && !auth.isPublicUser()"><a ng-click="logoff()">Logoff</a></li>
+            <li ng-if="!auth.isLoggedIn || auth.isPublicUser()"><a data-target="#loginModal" data-toggle="modal">Login</a></li>
+          </ul>
+        </li>
+		<li class="nav navbar-nav"><a href="#" class="nav navbar-nav" id="stream-toggle"><span class="glyphicon glyphicon-road" aria-hidden="true"></span></a>
+		</li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<div class="modal" id="createIssueModal" fade-in>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" text="x"/>
+                <h3 class="modal-title">Create Issue</h3>
+            </div>
+            <div class="modal-body">
+
+			<form>
+			  <div class="form-group">
+			    <label for="subject">Subject</label>
+			    <input type="text" class="form-control" id="subject" placeholder="Subject" ng-model="issue.subject">
+			  </div>
+			  <div class="form-group">
+			    <label for="description">Description</label>
+			    <textarea class="form-control" id="description" placeholder="Description" ng-model="issue.description"></textarea>
+			  </div>
+			  <div class="form-group">
+			    <label for="issueTypeId">Issue Type</label>
+			     <input type="radio" name="selectedIssueTypeId" value="1" ng-checked="issue.issueTypeId == 1" ng-model="issue.issueTypeId"/>&nbsp;<span class="glyphicon glyphicon-flash" aria-hidden="true"></span> Issue
+			     <input type="radio" name="selectedIssueTypeId" value="2" ng-checked="issue.issueTypeId == 2" ng-model="issue.issueTypeId"/>&nbsp;<span class="glyphicon glyphicon-film" aria-hidden="true"></span> Story
+			     <input type="radio" name="selectedIssueTypeId" value="3" ng-checked="issue.issueTypeId == 3" ng-model="issue.issueTypeId"/>&nbsp;<span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Incident
+			    
+			  </div>
+			  <div class="form-group">
+			    <label for="projectId">Project</label>
+				<select id="projectId" ng-model="issue.projectId" ng-options="project.projectId as project.name for project in projects">
+				</select>
+			  </div>
+			  <div class="form-group">
+			    <label for="componentId">Component</label>
+				<select id="componentId" ng-model="issue.componentId" ng-options="component.componentId as component.name for component in components">
+				</select>
+			  </div>
+			  <div class="form-group">
+			    <label for="assignedToUserId">Responsible</label>
+				<select id="assignedToUserId" ng-model="issue.assignedToUserId" ng-options="user.userId as user.displayName for user in users">
+				</select>
+			  </div>
+			  <button type="submit" class="btn btn-primary" id="create-button" ng-click="createIssue()">Create</button>
+			  <button type="submit" class="btn btn-default" data-dismiss="modal"">Close</button>
+			</form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="modal" id="createFromFileModal" fade-in>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" text="x"/>
+                    <h3 class="modal-title">Create Issues from File</h3>
+                </div>
+                <div class="modal-body">
+<p>Upload image files or Word files to create issues</p>
+                    <form action="/file-upload"
+                          class="dropzone"
+                          id="file-to-issues-zone"></form>
+
+
+                        <button type="submit" class="btn btn-default" data-dismiss="modal"">Close</button>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<div class="modal" id="loginModal" fade-in>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" text="x"/>
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+
+			<form>
+			  <div class="form-group">
+			    <label for="username">Username</label>
+			    <input type="text" class="form-control" id="username" placeholder="username" ng-model="username">
+			  </div>
+			  <div class="form-group">
+			    <label for="password">Password</label>
+			    <input type="password" class="form-control" id="password" placeholder="Password" ng-model="password">
+			  </div>
+			  <button type="submit" class="btn btn-primary" id="login-button" data-dismiss="modal" ng-click="login()"><i class="glyphicon glyphicon-user glyphicon-white"></i>Log in</button>
+			</form>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>

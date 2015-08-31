@@ -1,0 +1,114 @@
+<div class="adminpage" style="height: 100%;">
+
+<div class="container-fluid" style="height: 100%;">
+<div class="row" style="height: 100%;">
+	<div class="col-md-8">
+
+		<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+		    <div class="nav navbar-nav">
+				<button type="button" id="button-new" class="btn btn-default navbar-btn" ng-click="openCreate()">New</button>
+				<button type="button" id="button-open" class="btn btn-default navbar-btn" ng-click="openProject()">Open</button>
+				<button type="button" id="button-edit" class="btn btn-default navbar-btn" ng-click="openUpdate()">Edit</button>
+				<button type="button" id="button-delete" class="btn btn-default navbar-btn">Delete</button>
+			</div>
+			<form class="navbar-form navbar-left" role="search">
+				<div class="form-group">
+				<input type="text" id="searchbox" class="form-control" placeholder="Search">
+				</div>
+			</form>
+		</div>
+		</nav>
+		<table id="usersTable" class="display dataTable">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>DisplayName</th>
+					<th>Email</th>
+					<th>Points</th>
+					<th>Confirmed</th>
+				</tr>
+			</thead>
+		
+			<tfoot>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>DisplayName</th>
+					<th>Email</th>
+					<th>Points</th>
+					<th>Confirmed</th>
+				</tr>
+			</tfoot>
+</table>
+
+
+	</div>
+	<div class="col-md-4">	
+	
+		<div id="previewpane" class="previewpane">
+
+		<table ng-show="preview != null">
+		<tr>
+			<th colspan="2">{{preview.objectName}}</th>
+		</tr>
+		<tr ng-repeat="property in preview.properties">
+			<td>{{property.caption}}</td>
+			<td>{{property.value}}</td>
+		</tr>
+		
+		</table>
+		
+		</div>
+	</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+		<form role="form" name="userForm" id="userForm" class="css-form">
+		<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">User</h4>
+      </div>
+      <div class="modal-body">
+		  <div class="form-group">
+			<label for="name">Name</label>
+			<input type="text" class="form-control" id="name" placeholder="Enter Name" ng-model="user.name" required>
+			<span class="help-block"
+				  ng-show="form.name.$invalid && form.name.$dirty">
+				  {{errorMessage('name')}}
+				</span>
+		  </div>
+		  <div class="form-group">
+			<label for="displayName">Identifier</label>
+			<input type="text" class="form-control" id="identifier" placeholder="Enter DisplayName" ng-model="user.displayName" required>
+			<span class="help-block"
+				  ng-show="form.identifier.$invalid && form.identifier.$dirty">
+				  {{errorMessage('identifier')}}
+				</span>
+		  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="save(project)">Save changes</button>
+		
+		<pre>form = {{project | json}}</pre>
+  <pre>master = {{master | json}}</pre>
+      </div>
+	  		</form>
+
+    </div>
+  </div>
+</div>
+</div>

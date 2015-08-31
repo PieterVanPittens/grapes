@@ -1,0 +1,104 @@
+<div class="row">
+  <div class="col-md-4">
+
+	<div ng-bind-html="html"></div>
+  
+  
+  </div>
+  <div class="col-md-4">
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Top N last X
+	  </div>
+	</div>
+
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    <div class="panel-heading">Projects</div>
+	    <ol>
+	    	<li ng-repeat="project in projects"><a href="#/wiki/{{project.wikiName}}">{{project.name}}</a></li>
+	    </ol>
+	  </div>
+	</div>
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Latest Releases
+	  </div>
+	</div>
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	  <pre>
+	    Some Stats'n'Facts
+	    total # of points
+		</pre>
+	  </div>
+	</div>
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Upcoming dates
+	  </div>
+	</div>
+
+	<div class="panel panel-default">
+	  <div class="panel-header">Badges</div>
+	  <div class="panel-body">
+	    <ol>
+	    	 <li ng-repeat="badge in badges"><a href="#/wiki/{{badge.wikiName}}">{{badge.name}}</a></li>
+	    </ol>
+	  </div>
+	</div>
+
+	<div class="panel panel-default">
+	  <div class="panel-header">Tiles</div>
+	  <div class="panel-body">
+	    <ol>
+	    	 <li ng-repeat="tile in tiles"><a href="#/wiki/{{tile.wikiName}}">{{tile.name}}</a></li>
+	    </ol>
+	  </div>
+	</div>
+	
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Secret Areas:
+	    <ol>
+	    <li>not reproducible</li>
+	    <li>not been touched for quite a while</li>
+	    </ol>
+	    
+	  </div>
+	</div>
+  
+  
+  </div>
+ <div class="col-md-4">
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    <div class="panel-heading">Users</div>
+	    filter to registered/active ones
+	    <ol>
+	    	<li ng-repeat="user in users"><a href="#/wiki/{{user.wikiName}}">{{user.name}} ({{user.points}})</a></li>
+	    </ol>
+	  </div>
+	</div>
+
+
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    Secret Areas:
+	    <ol>
+	    <li>not reproducible</li>
+	    <li>not been touched for quite a while</li>
+	    </ol>
+	    
+	  </div>
+	</div>
+ 
+ </div>
+</div>
+

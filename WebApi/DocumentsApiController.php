@@ -1,4 +1,4 @@
-<?
+<?php
 
 class DocumentsApiController extends BaseWebApiController {
 
@@ -26,13 +26,8 @@ class DocumentsApiController extends BaseWebApiController {
 	public function getDocumentByName($parameters) {
 		$name = $parameters["name"];
 		$service = new DocumentService($this->contextUser, $this->repository);
-		$validationState = new ValidationState();
-		$model = $service->getDocumentByName($name, $validationState);
-		if ($model == null) {
-			return $validationState;
-		} else {
-			return $model;
-		}
+		$model = $service->getDocumentByName($name);
+		return $model;
 	}
 	
 	/**
@@ -43,30 +38,8 @@ class DocumentsApiController extends BaseWebApiController {
 	public function getDocumentContentById($parameters) {
 		$id = $parameters["id"];
 		$service = new DocumentService($this->contextUser, $this->repository);
-		$validationState = new ValidationState();
-		$model = $service->getDocumentContentById($id, $validationState);
-		if ($model == null) {
-			return $validationState;
-		} else {
-			return $model;
-		}
-	}
-
-	/**
-	 * retrieves a raw content DocumentContent by id
-	 * @param array $parameters
-	 * @return string
-	 */
-	public function getDocumentContentRawById($parameters) {
-		$id = $parameters["id"];
-		$service = new DocumentService($this->contextUser, $this->repository);
-		$validationState = new ValidationState();
-		$raw = $service->getDocumentContentRawById($id, $validationState);
-		if ($raw == null) {
-			return $validationState;
-		} else {
-			return $raw;
-		}
+		$model = $service->getDocumentContentById($id);
+		return $model;
 	}
 
 	/**
@@ -77,16 +50,36 @@ class DocumentsApiController extends BaseWebApiController {
 	public function getDocumentContentWikiById($parameters) {
 		$id = $parameters["id"];
 		$service = new DocumentService($this->contextUser, $this->repository);
-		$validationState = new ValidationState();
-		$raw = $service->getDocumentContentWikiById($id, $validationState);
-		if ($raw == null) {
-			return $validationState;
-		} else {
-			return $raw;
-		}
+		$html = $service->getDocumentContentWikiById($id);
+		return $html;
 	}
 	
+	/**
+	 * creates a new document content, i.e. new content version
+	 * @param unknown $parameters
+	 */
+	public function createDocumentContent($parameters) {
+		$body = file_get_contents('php://input');
+		$content = DocumentContent::createModelFromJson($body);
+		
+		$service = new DocumentService($this->contextUser, $this->repository);
+		$result = $service->createNewContentVersion($content);
+		return $result;
+	}
+
+	/**
+	 * creates a new document including first version of content
+	 * used for creating wiki pages
+	 * @param unknown $parameters
+	 */
+	public function createDocument($parameters) {
+		$body = file_get_contents('php://input');
+		$document = Document::createModelFromJson($body);
 	
+		$service = new DocumentService($this->contextUser, $this->repository);
+		$result = $service->createDocument($document);
+		return $result;
+	}
 	
 }
 

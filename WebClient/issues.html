@@ -1,0 +1,57 @@
+<div class="adminpage" style="height: 100%;">
+
+<div class="container-fluid" style="height: 100%;">
+<div class="row" style="height: 100%;">
+	<div class="col-md-12">
+
+		<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+		    <div class="nav navbar-nav">
+				<button type="button" id="button-new" class="btn btn-default navbar-btn" ng-click="openCreate()">New</button>
+				<button type="button" id="button-open" class="btn btn-default navbar-btn" ng-click="openProject()">Open</button>
+				<button type="button" id="button-edit" class="btn btn-default navbar-btn" ng-click="openUpdate()">Edit</button>
+				<button type="button" id="button-delete" class="btn btn-default navbar-btn">Delete</button>
+			</div>
+			<form class="navbar-form navbar-left" role="search">
+				<div class="form-group">
+				<input type="text" id="searchbox" class="form-control" placeholder="Search">
+				</div>
+			</form>
+		</div>
+		</nav>
+		<table id="issuesTable" class="display dataTable">
+			<thead>
+				<tr>
+					<th>Issue</th>
+					<th>Project</th>
+					<th>Component</th>
+					<th>Type</th>
+					<th>Status</th>
+					<th>Responsible</th>
+					<th>Created</th>
+					<th>CreatedBy</th>
+					
+				</tr>
+			</thead>
+		
+			<tfoot>
+				<tr>
+					<th>Issue</th>
+					<th>Project</th>
+					<th>Component</th>
+					<th>Type</th>
+					<th>Status</th>
+					<th>Responsible</th>
+					<th>Created</th>
+					<th>CreatedBy</th>
+				</tr>
+			</tfoot>
+		</table>
+
+
+	</div>
+
+</div>
+</div>
+
+</div>

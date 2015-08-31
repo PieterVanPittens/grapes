@@ -1,18 +1,14 @@
-<?
+<?php
 
 class DashboardsApiController extends BaseWebApiController {
 
-	public function Get($parameters) {
-		$dashboardName = $parameters["dashboardName"];
+	public function getDashboardById($parameters) {
+		$dashboardId = $parameters["id"];
 		
 		$service = new DashboardService($this->contextUser, $this->repository);
 		
-		$dashboard = $service->getDashboardByName($dashboardName);
-		if ($dashboard == null) {
-			return "HTTP/1.0 404 Not Found";
-		} else {
-			return json_encode($dashboard);
-		}
+		$dashboard = $service->getDashboardById($dashboardId);
+		return $dashboard;
 	}
 	
 	/**
@@ -37,24 +33,24 @@ class DashboardsApiController extends BaseWebApiController {
 	 * adds a tile to a dashboard
 	 * @param unknown $parameters
 	 */
-	public function AddTileToDashboard($parameters) {
+	public function addTileToDashboard($parameters) {
 		$dashboardId = $parameters["id"];
 		$service = new DashboardService($this->contextUser, $this->repository);
 		
 		$dashboard = $service->getDashboardById($dashboardId);
 		if ($dashboard == null) {
-			return "HTTP/1.0 404 Not Found";
+			throw new WebApiException("dashboardId $dashboardId does not exist");
 		}
-
-		$tileId = $_POST["tileId"];
 		
-		$tile = $service->getTile($tileId);
+		$tileId = $this->getMandatoryParameter("tileId");
+		
+		$tile = $service->getTileById($tileId);
 		if ($tile == null) {
-			return "HTTP/1.0 400 Tile not Found";
+			throw new WebApiException("tileId $tileId does not exist");
 		}
 
-		$validationState = new ValidationState();
-		$dashboardTile = $service->addTileToDashboard($tile, $dashboard, $validationState);	
+		$actionResult = $service->addTileToDashboard($tile, $dashboard);	
+		return $actionResult;
 	}
 	
 
@@ -65,8 +61,8 @@ class DashboardsApiController extends BaseWebApiController {
 	public function removeTileFromDashboard($parameters) {
 		$tileId = $parameters["id"];
 		$service = new DashboardService($this->contextUser, $this->repository);
-		$service->removeTileFromDashboard($tileId);
-		
+		$actionResult = $service->removeTileFromDashboard($tileId);
+		return $actionResult;
 	}
 	
 	
@@ -76,18 +72,11 @@ class DashboardsApiController extends BaseWebApiController {
 	 * @return string
 	 */
 	public function GetTiles() {
-	
 		$service = new DashboardService($this->contextUser, $this->repository);
-	
 		$tiles = $service->getTiles();
 		$result = array();
-		$result["tiles"] = $tiles;
-		
-		if ($tiles == null) {
-			return "HTTP/1.0 404 Not Found";
-		} else {
-			return json_encode($result);
-		}
+		$result["data"] = $tiles;
+		return $result;
 	}
 	
 }
