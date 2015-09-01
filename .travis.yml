@@ -8,4 +8,16 @@ script: phpunit test/test.php
 
 before_script:
   - mysql -e 'create database grapes_test;'
-  
+ deploy:
+  provider: openshift
+  skip_cleanup: true
+  clean_up: false
+  user: pieter.van.pittens@outlook.com
+  password:
+    secure: FZ9WCz1u9KF1TwDyPXBlJg5CtSHb+CV7jchkdyR3Pe8ewpmpSVJT833bc4MEEurJNcuJ3ZvhZATJQMG9zBVdP+vTgqgjTo31gEB02uug52KR2bPozqUhQ1f4mQ3jzjdZgN6SJ4GZGfe+2DMwdjHI3s4ID/Q76cgYDADzgpeKRy7PhHh13E/hglZt5qJSN7B/j8tUZYicRve0JmwJVsaOQNOMb+DD8bNk+SBuR9OC6fhKKY13IrAZegJrvFyDufPr5AGGkrxLblWHzWj1C8Ok0k8hIraJhjo4E7aepC0aK138F5vGTnMOMdNQGTP376vVyQiEWfBR8F4kubHw0XdWEdpXRR3PEFXk5N+beEg8PN0bExclEDgyE46g9vbeo+AEdGlHMksn2I7rENMYYhQrQ+6iBFealXoRwbsM1/tUQ0dDbeyvxLyLA9prZl+OOX3RRCNNkTqvG5MDosu/tulERKopL3NvrS249HxgJXtv2wcEPPrcK13MTSm9x/KXnHZiCP7YCm946ZQRjmgERDS/E9QI2nA0+TlCv8UBU6TiMScajxkGuyN+xJgVnFCZN+ZEejeoLQjUTAj69MqMSKYAy/4cpGnk7C3aIHVsx+/G+Z9u8dlEQErK5ZImncZtjSmrHnnXRyHZ/vRxJq/MPFC7xk71j3jrpoWRmnsCDy8UpD8=
+  app: grapes
+  domain: cforge
+  on:
+    repo: PieterVanPittens/grapes
+    branch: master
+  deployment_branch: master 
