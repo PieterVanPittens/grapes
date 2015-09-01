@@ -24,4 +24,4 @@ after_success:
 - git config --global user.name "Travis CI"
 - git add .
 - git commit -am "Travis change"
-- git push origin master
+- git push origin master --force
