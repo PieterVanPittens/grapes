@@ -17,4 +17,3 @@ deploy:
     repo: PieterVanPittens/grapes
     branch: develop
   deployment_branch: master
-
