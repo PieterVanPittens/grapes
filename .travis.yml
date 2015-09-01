@@ -18,6 +18,8 @@ deploy:
     branch: develop
   deployment_branch: master
 after_success:
+- git show-branch -a
+- git checkout master
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
 - git add .
