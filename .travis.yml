@@ -22,6 +22,8 @@ after_success:
 - git checkout master
 - git config --global user.email "travis@localhost.localdomain"
 - git config --global user.name "Travis CI"
+- touch testfile
+- git add testfile
 - git add .
 - git commit -am "Travis change"
 - git push origin master --force
